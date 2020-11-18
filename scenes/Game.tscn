@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/Game.gd" type="Script" id=1]
+
+[node name="Game" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.447059, 0.411765, 0.470588, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 40
+custom_constants/margin_top = 40
+custom_constants/margin_left = 40
+custom_constants/margin_bottom = 40
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Areas" type="VBoxContainer" parent="Margin"]
+margin_left = 40.0
+margin_top = 40.0
+margin_right = 984.0
+margin_bottom = 560.0
+custom_constants/separation = 20
+
+[node name="Remote" type="HBoxContainer" parent="Margin/Areas"]
+margin_right = 944.0
+custom_constants/separation = 20
+alignment = 1
+
+[node name="Town" type="HBoxContainer" parent="Margin/Areas"]
+margin_top = 20.0
+margin_right = 944.0
+margin_bottom = 20.0
+
+[node name="Local" type="CenterContainer" parent="Margin/Areas"]
+margin_top = 40.0
+margin_right = 944.0
+margin_bottom = 40.0

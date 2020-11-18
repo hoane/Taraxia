@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://src/GrabBag.gd" type="Script" id=1]
+[ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[node name="GrabBag" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Color" type="ColorRect" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+color = Color( 0.54902, 0.509804, 0.439216, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="VBoxContainer" parent="."]
+margin_right = 1024.0
+margin_bottom = 600.0
+custom_constants/separation = 5
+
+[node name="Label" type="Label" parent="Content"]
+margin_right = 1024.0
+margin_bottom = 24.0
+custom_fonts/font = SubResource( 1 )
+
+[node name="Grid" type="GridContainer" parent="Content"]
+margin_top = 29.0
+margin_right = 1024.0
+margin_bottom = 29.0
+custom_constants/vseparation = 0
+custom_constants/hseparation = 0
+columns = 5

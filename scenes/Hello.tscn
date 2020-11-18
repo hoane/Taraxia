@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/sayhello.gd" type="Script" id=1]
+[ext_resource path="res://scenes/RoleCoin.tscn" type="PackedScene" id=2]
+
+
+
+[node name="Panel" type="Panel"]
+margin_left = -3.0
+margin_top = -1.0
+margin_right = 219.0
+margin_bottom = 172.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+
+[node name="Label" type="Label" parent="."]
+margin_left = 54.0
+margin_top = 43.0
+margin_right = 179.0
+margin_bottom = 75.0
+text = "Hello, Scripting"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Button" type="Button" parent="."]
+margin_left = 38.0
+margin_top = 93.0
+margin_right = 180.0
+margin_bottom = 141.0
+text = "Press Me"
+
+[node name="RoleCoin" parent="." instance=ExtResource( 2 )]
+position = Vector2( 410.975, 173.882 )

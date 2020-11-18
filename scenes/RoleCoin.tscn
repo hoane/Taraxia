@@ -1,0 +1,65 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://src/RoleCoin.gd" type="Script" id=1]
+[ext_resource path="res://assets/spritesheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 2 )
+region = Rect2( 64, 0, 64, 64 )
+
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 2 )
+region = Rect2( 128, 0, 64, 64 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 18
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 3 )
+
+[node name="RoleCoin" type="MarginContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -960.0
+margin_bottom = -504.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="VBoxContainer" parent="."]
+margin_right = 84.0
+margin_bottom = 96.0
+custom_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Content"]
+margin_right = 84.0
+margin_bottom = 64.0
+custom_constants/margin_right = 10
+custom_constants/margin_left = 10
+
+[node name="Button" type="TextureButton" parent="Content/MarginContainer"]
+margin_left = 10.0
+margin_right = 74.0
+margin_bottom = 64.0
+texture_normal = SubResource( 1 )
+texture_pressed = SubResource( 2 )
+texture_hover = SubResource( 3 )
+
+[node name="RoleLabel" type="Label" parent="Content"]
+margin_top = 64.0
+margin_right = 84.0
+margin_bottom = 88.0
+custom_fonts/font = SubResource( 4 )
+text = "Error"
+align = 1
+clip_text = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Content/MarginContainer/Button" to="." method="_on_Button_pressed"]

@@ -1,0 +1,94 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/LobbyMenu.gd" type="Script" id=1]
+[ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://scenes/GrabBag.tscn" type="PackedScene" id=3]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 2 )
+
+[node name="LobbyMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color( 0.45098, 0.560784, 0.466667, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Margin" type="MarginContainer" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+custom_constants/margin_right = 120
+custom_constants/margin_top = 80
+custom_constants/margin_left = 120
+custom_constants/margin_bottom = 80
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Content" type="HBoxContainer" parent="Margin"]
+margin_left = 120.0
+margin_top = 80.0
+margin_right = 232.0
+margin_bottom = 142.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Local" type="VBoxContainer" parent="Margin/Content"]
+margin_right = 72.0
+margin_bottom = 62.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Player" type="CenterContainer" parent="Margin/Content/Local"]
+margin_right = 72.0
+
+[node name="StartButton" type="Button" parent="Margin/Content/Local"]
+margin_top = 20.0
+margin_right = 72.0
+margin_bottom = 50.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
+text = "Start"
+
+[node name="Remote" type="VBoxContainer" parent="Margin/Content"]
+margin_left = 92.0
+margin_right = 92.0
+margin_bottom = 62.0
+custom_constants/separation = 20
+
+[node name="Roles" type="VBoxContainer" parent="Margin/Content"]
+margin_left = 112.0
+margin_right = 112.0
+margin_bottom = 62.0
+
+[node name="Selected" parent="Margin/Content/Roles" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_bottom = 29.0
+title = "Selected Roles"
+
+[node name="Unselected" parent="Margin/Content/Roles" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 33.0
+margin_bottom = 62.0
+title = "Available Roles:"
+[connection signal="pressed" from="Margin/Content/Local/StartButton" to="." method="_on_StartButton_pressed"]
