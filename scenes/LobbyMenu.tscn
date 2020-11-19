@@ -29,8 +29,8 @@ __meta__ = {
 }
 
 [node name="Margin" type="MarginContainer" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 custom_constants/margin_right = 120
 custom_constants/margin_top = 80
 custom_constants/margin_left = 120
@@ -39,56 +39,74 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Content" type="HBoxContainer" parent="Margin"]
+[node name="Content" type="VBoxContainer" parent="Margin"]
 margin_left = 120.0
 margin_top = 80.0
-margin_right = 232.0
-margin_bottom = 142.0
+margin_right = 1480.0
+margin_bottom = 820.0
+custom_constants/separation = 20
+
+[node name="Content" type="HBoxContainer" parent="Margin/Content"]
+margin_right = 1360.0
+margin_bottom = 690.0
+size_flags_vertical = 3
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Local" type="VBoxContainer" parent="Margin/Content"]
-margin_right = 72.0
-margin_bottom = 62.0
+[node name="Players" type="VBoxContainer" parent="Margin/Content/Content"]
+margin_right = 446.0
+margin_bottom = 690.0
+size_flags_horizontal = 3
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Player" type="CenterContainer" parent="Margin/Content/Local"]
-margin_right = 72.0
+[node name="Local" type="CenterContainer" parent="Margin/Content/Content/Players"]
+margin_right = 446.0
 
-[node name="StartButton" type="Button" parent="Margin/Content/Local"]
+[node name="Remote" type="VBoxContainer" parent="Margin/Content/Content/Players"]
 margin_top = 20.0
-margin_right = 72.0
-margin_bottom = 50.0
+margin_right = 446.0
+margin_bottom = 20.0
+custom_constants/separation = 20
+
+[node name="Roles" type="VBoxContainer" parent="Margin/Content/Content"]
+margin_left = 466.0
+margin_right = 1360.0
+margin_bottom = 690.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+custom_constants/separation = 20
+
+[node name="Selected" parent="Margin/Content/Content/Roles" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 894.0
+margin_bottom = 335.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+title = "Selected Roles:"
+
+[node name="Unselected" parent="Margin/Content/Content/Roles" instance=ExtResource( 3 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 355.0
+margin_right = 894.0
+margin_bottom = 690.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+title = "Available Roles:"
+
+[node name="StartButton" type="Button" parent="Margin/Content"]
+margin_left = 1288.0
+margin_top = 710.0
+margin_right = 1360.0
+margin_bottom = 740.0
+size_flags_horizontal = 8
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color_pressed = Color( 0, 0, 0, 1 )
 text = "Start"
-
-[node name="Remote" type="VBoxContainer" parent="Margin/Content"]
-margin_left = 92.0
-margin_right = 92.0
-margin_bottom = 62.0
-custom_constants/separation = 20
-
-[node name="Roles" type="VBoxContainer" parent="Margin/Content"]
-margin_left = 112.0
-margin_right = 112.0
-margin_bottom = 62.0
-
-[node name="Selected" parent="Margin/Content/Roles" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_bottom = 29.0
-title = "Selected Roles"
-
-[node name="Unselected" parent="Margin/Content/Roles" instance=ExtResource( 3 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 33.0
-margin_bottom = 62.0
-title = "Available Roles:"
-[connection signal="pressed" from="Margin/Content/Local/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Margin/Content/StartButton" to="." method="_on_StartButton_pressed"]

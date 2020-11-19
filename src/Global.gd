@@ -177,7 +177,7 @@ const roles = {
 		DESCRIPTION: "The Android's developed a bit of a death wish after so many dangerous missions.",
 	},
 	Role.SECURITY: {
-		NAME: "Security Officer",
+		NAME: "Security",
 		TEAM: Team.CREW,
 		INSTRUCT: "The Security Officer does not perform any special action. If they die at the end of the game, their vote dies as well",
 		DESCRIPTION: "So anyway, I started blasting...",

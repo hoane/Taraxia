@@ -5,6 +5,7 @@ signal pressed(select, index)
 var role
 var select
 var index
+var texture
 
 func init(_role, _select, _index):
 	role = _role
@@ -13,7 +14,7 @@ func init(_role, _select, _index):
 
 
 onready var role_label = $Content/RoleLabel
-onready var button = $Content/MarginContainer/Button
+onready var button = $Content/Button
 
 func _ready():
 	role_label.text = role[Global.NAME]

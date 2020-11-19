@@ -40,7 +40,6 @@ func get_local_player_index() -> int:
 	return -1
 
 func create_game_tree():
-	messages.broadcast_message("Starting Game!")
 	town_node.create_town_nodes(town_state.size())
 	remote_players_node.create_remote_player_nodes(player_state.size() - 1)
 	for i in player_state.size():
@@ -61,16 +60,31 @@ func get_remote_player_index(index: int) -> int:
 
 # Call on server after create_game_tree is complete on all clients
 func server_start_game():
-	print("Starting game...")
+	messages.broadcast_message("Starting Game!")
 	server_randomize_roles()
 
 func server_randomize_roles():
 	var indices = range(role_state.size())
 	indices.shuffle()
 	for i in range(player_state.size()):
-		rpc("_set_player_role", i, indices.pop_front())
+		var role_index = indices.pop_front()
+		rpc("_set_player_role", i, role_index)
+		var role = role_state[role_index]
+		messages.send_message(player_state[i][Global.ID], "You are the %s.\n  %s\n  %s" % [
+			role[Global.NAME],
+			role[Global.DESCRIPTION],
+			role[Global.INSTRUCT],
+		])
 	for i in range(town_state.size()):
 		rpc("_set_town_role", i, indices.pop_front())
+
+remotesync func message_player_role():
+	var role = role_state[player_state[local_player_index][Global.ROLE]]
+	messages.send_local_message("You are the %s.\n  %s\n  %s" % [
+		role[Global.NAME],
+		role[Global.DESCRIPTION],
+		role[Global.INSTRUCT],
+	])
 
 remotesync func _set_player_role(player_index: int, role_index: int):
 	print("Setting player %s to role %s" % [player_index, role_index])

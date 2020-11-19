@@ -13,16 +13,16 @@ func broadcast_message(message):
 
 remotesync func _broadcast_message(message):
 	message_label.push_color(broadcast_color)
-	message_label.add_text("• %s" % message)
+	message_label.add_text("• %s\n" % message)
+	message_label.pop()
+
+remote func send_local_message(message: String):
+	message_label.push_color(message_color)
+	message_label.add_text("• %s\n" % message)
 	message_label.pop()
 
 func send_message(id: int, message: String):
-	if id == 1:
-		_send_message(message)
+	if id == get_tree().get_network_unique_id():
+		send_local_message(message)
 	else:
-		rpc_id(id, "_send_message", message)
-
-remote func _send_message(message: String):
-	message_label.push_color(message_color)
-	message_label.add_text("• %s" % message)
-	message_label.pop()
+		rpc_id(id, "send_local_message", message)

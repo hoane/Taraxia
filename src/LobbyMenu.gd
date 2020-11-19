@@ -10,11 +10,11 @@ var player_labels = {}
 func init(_is_server):
 	is_server = _is_server
 
-onready var remote_tree = $Margin/Content/Remote
-onready var local_tree = $Margin/Content/Local/Player
-onready var start_button = $Margin/Content/Local/StartButton
-onready var selected_bag = $Margin/Content/Roles/Selected
-onready var unselected_bag = $Margin/Content/Roles/Unselected
+onready var remote_tree = $Margin/Content/Content/Players/Remote
+onready var local_tree = $Margin/Content/Content/Players/Local
+onready var start_button = $Margin/Content/StartButton
+onready var selected_bag = $Margin/Content/Content/Roles/Selected
+onready var unselected_bag = $Margin/Content/Content/Roles/Unselected
 onready var peer_id = get_tree().get_network_unique_id()
 
 # Called when the node enters the scene tree for the first time.
@@ -37,8 +37,8 @@ func _ready():
 		sel_coin.button.disabled = !is_server
 		unsel_coin.button.disabled = !is_server
 
-	selected_bag.rect_min_size = Vector2(5 * sel_coin.rect_size.x, 2 * sel_coin.rect_size.y)
-	unselected_bag.rect_min_size = Vector2(5 * sel_coin.rect_size.x, 2 * sel_coin.rect_size.y)
+	selected_bag.rect_min_size = Vector2(5 * sel_coin.rect_min_size.x, 2 * sel_coin.rect_min_size.y)
+	unselected_bag.rect_min_size = Vector2(5 * sel_coin.rect_min_size.x, 2 * sel_coin.rect_min_size.y)
 	selected_bag.set_all_invisible()
 
 func add_player(player):
