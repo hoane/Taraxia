@@ -14,8 +14,6 @@ var players: Dictionary = {}
 var roles: Array
 var preconfigured_ids
 
-onready var peer_id = get_tree().get_network_unique_id()
-
 func init(_is_server, _local_player):
 	local_player = _local_player
 	is_server = _is_server
@@ -41,22 +39,30 @@ func enter_lobby():
 func _lobby_start_button(_players, _roles):
 	players = _players
 	roles = _roles
-	var game_state = Global.init_game_state(_players.values(), _roles)
+	var game_state = Global.init_game_state(_players, _roles)
+	print("Signalling enter game...")
 	rpc("_enter_game", game_state)
-	_enter_game(game_state)
 
-
-remote func _enter_game(game_state):
+remotesync func _enter_game(game_state):
+	print("Entering game...")
 	state = State.GAME
 	lobby_game = Global.Game.instance()
+	lobby_game.connect("ready", self, "_on_game_ready")
 	lobby_game.init(game_state)
 	add_child(lobby_game)
-	yield(lobby_game, "ready")
-	lobby_game.preconfigure()
-	rpc_id(1, "_done_game_init")
 	lobby_menu.queue_free()
 
+func _on_game_ready():
+	if get_tree().is_network_server():
+		done_game_init()
+	else:
+		rpc_id(1, "_done_game_init")
+
 remote func _done_game_init():
+	done_game_init()
+
+func done_game_init():
+	print("Signalling done game init...")
 	var id = get_tree().get_rpc_sender_id()
 
 	assert(get_tree().is_network_server())
@@ -64,9 +70,9 @@ remote func _done_game_init():
 	assert(not id in preconfigured_ids) # Was not added yet
 
 	preconfigured_ids.append(id)
+	print("Got %s acks of %s" % [preconfigured_ids.size(), players.size()])
 	if preconfigured_ids.size() == players.size():
-		lobby_game.start_game()
-
+		lobby_game.server_start_game()
 
 func _player_connected(id):
 	if state == State.LOBBY:

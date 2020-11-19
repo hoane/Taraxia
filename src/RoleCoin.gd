@@ -2,26 +2,20 @@ extends Control
 
 signal pressed(node)
 
-var role
-
-func init(_role):
-	role = _role
-
 onready var role_label = $Content/RoleLabel
 onready var button = $Content/MarginContainer/Button
 
 func _ready():
-	print(role)
-	role_label.text = role["name"]
+	button.disabled = true
 
-func get_role():
-	return role
+func set_role_name(role_name: String):
+	role_label.text = role_name
 
-func set_pressable(is_pressable):
-	button.disabled = !is_pressable
+func set_disabled(disabled: bool):
+	button.disabled = disabled
 
-func set_role_visible(is_visible):
-	role_label.visible = is_visible
+func set_role_visible(role_visible: bool):
+	role_label.visible = role_visible
 
 func _on_Button_pressed():
 	emit_signal("pressed", self)
