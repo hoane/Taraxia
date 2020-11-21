@@ -249,4 +249,5 @@ const available_roles = [
 ]
 
 func _ready():
+	OS.min_window_size = Vector2(400, 225)
 	randomize()

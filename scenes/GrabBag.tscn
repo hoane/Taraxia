@@ -18,28 +18,28 @@ __meta__ = {
 }
 
 [node name="Color" type="ColorRect" parent="."]
-margin_right = 1600.0
-margin_bottom = 900.0
+margin_right = 1280.0
+margin_bottom = 720.0
 color = Color( 0.54902, 0.509804, 0.439216, 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Content" type="VBoxContainer" parent="."]
-margin_right = 1600.0
-margin_bottom = 900.0
+margin_right = 1280.0
+margin_bottom = 720.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 5
 
 [node name="Label" type="Label" parent="Content"]
-margin_right = 1600.0
+margin_right = 1280.0
 margin_bottom = 24.0
 custom_fonts/font = SubResource( 1 )
 
 [node name="Grid" type="GridContainer" parent="Content"]
 margin_top = 29.0
-margin_right = 1600.0
+margin_right = 1280.0
 margin_bottom = 29.0
 custom_constants/vseparation = 0
 custom_constants/hseparation = 0

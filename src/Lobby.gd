@@ -78,7 +78,7 @@ func _player_connected(id):
 	if state == State.LOBBY:
 		rpc_id(id, "add_player", local_player)
 		if is_server:
-			lobby_menu.set_selected_roles(id)
+			lobby_menu.sync_state(id)
 
 func _player_disconnected(id):
 	if state == State.LOBBY:

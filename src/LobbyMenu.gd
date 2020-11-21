@@ -14,30 +14,19 @@ onready var remote_tree = $Margin/Content/Content/Players/Remote
 onready var local_tree = $Margin/Content/Content/Players/Local
 onready var start_button = $Margin/Content/StartButton
 onready var selected_bag = $Margin/Content/Content/Roles/Selected
-onready var unselected_bag = $Margin/Content/Content/Roles/Unselected
 onready var peer_id = get_tree().get_network_unique_id()
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	start_button.visible = is_server
 
-	var sel_coin
-
 	for i in range(Global.available_roles.size()):
 		var r = Global.available_roles[i]
-		sel_coin = Global.LobbyRoleCoin.instance()
-		var unsel_coin = Global.LobbyRoleCoin.instance()
-		sel_coin.init(r, true, i)
-		unsel_coin.init(r, false, i)
+		var lobby_coin = Global.LobbyRoleCoin.instance()
+		lobby_coin.init(r, false)
 
-		sel_coin.connect("pressed", self, "_on_role_button_pressed")
-		unsel_coin.connect("pressed", self, "_on_role_button_pressed")
-		selected_bag.add_item(sel_coin)
-		unselected_bag.add_item(unsel_coin)
-		sel_coin.button.disabled = !is_server
-		unsel_coin.button.disabled = !is_server
-
-	selected_bag.set_all_invisible()
+		selected_bag.add_item(lobby_coin)
+		lobby_coin.set_pressable(is_server)
 
 func add_player(player):
 	var node = Global.LobbyPlayerLabel.instance()
@@ -53,32 +42,17 @@ func remove_player(id):
 	player_labels[id].queue_free()
 	player_labels.erase(id)
 
-func _on_role_button_pressed(select, index):
-	if !is_server:
-		return
-
-	selected_bag.set_item_visible(index, !select)
-	unselected_bag.set_item_visible(index, select)
-
-func set_selected_roles(id):
-	assert (is_server)
-	selected_bag.sync_all(id)
-	unselected_bag.sync_all(id)
-
-func get_selected_roles() -> Array:
-	var ret = []
-	for c in selected_bag.get_items():
-		ret.append(c.role)
-	return ret
-
 func get_players() -> Dictionary:
 	var ret = {}
 	for k in player_labels.keys():
 		ret[k] = player_labels[k].player
 	return ret
 
+func sync_state(id):
+	selected_bag.sync_state(id)
+
 func _on_StartButton_pressed():
-	var roles = get_selected_roles()
+	var roles = selected_bag.get_selected_values()
 	var players = get_players()
 	if roles.size() > players.size():
-		emit_signal("lobby_start_button", get_players(), get_selected_roles())
+		emit_signal("lobby_start_button", players, roles)
