@@ -1,14 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scenes/RoleCoin.tscn" type="PackedScene" id=1]
-[ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://tex/PixelFont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://src/GamePlayerCoin.gd" type="Script" id=3]
-
-[sub_resource type="DynamicFont" id=1]
-size = 18
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 2 )
 
 [node name="GamePlayerCoin" type="MarginContainer"]
 margin_right = 40.0
@@ -25,21 +19,21 @@ __meta__ = {
 [node name="Content" type="VBoxContainer" parent="."]
 margin_left = 40.0
 margin_top = 10.0
-margin_right = 218.0
+margin_right = 124.0
 margin_bottom = 126.0
 
 [node name="Label" type="Label" parent="Content"]
-margin_right = 178.0
+margin_right = 84.0
 margin_bottom = 24.0
-custom_fonts/font = SubResource( 1 )
-text = "Errorpsdgffgds"
+custom_fonts/font = ExtResource( 2 )
+text = "Error"
 align = 1
 
 [node name="RoleCoin" parent="Content" instance=ExtResource( 1 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 28.0
-margin_right = 178.0
+margin_right = 84.0
 margin_bottom = 116.0
 custom_constants/margin_top = 0
 custom_constants/margin_bottom = 0

@@ -10,7 +10,7 @@ func create_remote_player_nodes(n):
 		var node = Global.GamePlayerCoin.instance()
 		content.add_child(node)
 
-func set_role(index: int, role_name: String):
+func set_role_name(index: int, role_name: String):
 	var node = content.get_child(index)
 	node.coin.set_role_name(role_name)
 

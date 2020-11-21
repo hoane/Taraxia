@@ -1,26 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/LobbyRoleCoin.gd" type="Script" id=1]
-[ext_resource path="res://assets/spritesheet.png" type="Texture" id=2]
-[ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=3]
-
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 64, 64 )
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 2 )
-region = Rect2( 64, 0, 64, 64 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 2 )
-region = Rect2( 128, 0, 64, 64 )
-
-[sub_resource type="DynamicFont" id=4]
-size = 14
-outline_size = 1
-outline_color = Color( 0, 0, 0, 1 )
-font_data = ExtResource( 3 )
+[ext_resource path="res://tex/PixelFont.tres" type="DynamicFont" id=2]
 
 [node name="RoleCoin" type="MarginContainer"]
 anchor_right = 1.0
@@ -38,21 +19,16 @@ margin_bottom = 396.0
 custom_constants/separation = 0
 
 [node name="Button" type="TextureButton" parent="Content"]
-margin_left = 348.0
-margin_right = 412.0
-margin_bottom = 64.0
+margin_left = 380.0
+margin_right = 380.0
 size_flags_horizontal = 4
-texture_normal = SubResource( 1 )
-texture_pressed = SubResource( 2 )
-texture_hover = SubResource( 3 )
 stretch_mode = 3
 
 [node name="RoleLabel" type="Label" parent="Content"]
-margin_top = 64.0
 margin_right = 760.0
-margin_bottom = 84.0
+margin_bottom = 24.0
 rect_min_size = Vector2( 100, 0 )
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = ExtResource( 2 )
 text = "Error"
 align = 1
 clip_text = true

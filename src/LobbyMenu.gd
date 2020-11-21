@@ -27,8 +27,8 @@ func _ready():
 		var r = Global.available_roles[i]
 		sel_coin = Global.LobbyRoleCoin.instance()
 		var unsel_coin = Global.LobbyRoleCoin.instance()
-		sel_coin.init(Global.roles[r], true, i)
-		unsel_coin.init(Global.roles[r], false, i)
+		sel_coin.init(r, true, i)
+		unsel_coin.init(r, false, i)
 
 		sel_coin.connect("pressed", self, "_on_role_button_pressed")
 		unsel_coin.connect("pressed", self, "_on_role_button_pressed")
@@ -37,8 +37,6 @@ func _ready():
 		sel_coin.button.disabled = !is_server
 		unsel_coin.button.disabled = !is_server
 
-	selected_bag.rect_min_size = Vector2(5 * sel_coin.rect_min_size.x, 2 * sel_coin.rect_min_size.y)
-	unselected_bag.rect_min_size = Vector2(5 * sel_coin.rect_min_size.x, 2 * sel_coin.rect_min_size.y)
 	selected_bag.set_all_invisible()
 
 func add_player(player):
@@ -70,7 +68,7 @@ func set_selected_roles(id):
 func get_selected_roles() -> Array:
 	var ret = []
 	for c in selected_bag.get_items():
-		ret.append(c.get_role())
+		ret.append(c.role)
 	return ret
 
 func get_players() -> Dictionary:

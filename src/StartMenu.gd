@@ -1,5 +1,7 @@
 extends Node
 
+var options_menu = Global.OptionsMenu.instance()
+
 onready var hostname_node = $Content/List/JoinLobbyContainer/Hostname
 onready var joinlobby_node = $Content/List/JoinLobbyContainer/JoinLobby
 onready var startlobby_node = $Content/List/StartLobby
@@ -16,8 +18,7 @@ func open_client(is_server):
 	open_child(client)
 
 func open_options():
-	var options = Global.OptionsMenu.instance()
-	open_child(options)
+	add_child(options_menu)
 
 func open_child(scene):
 	current_scene = scene

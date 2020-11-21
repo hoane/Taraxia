@@ -25,6 +25,7 @@ onready var remote_players_node = $Margin/Areas/Remote
 onready var town_node = $Margin/Areas/Town
 onready var local_player_node = $Margin/Areas/Local/LocalPlayer
 onready var messages = $Margin/Areas/Local/Messages
+onready var timer_stack = $ProgressTimerStack
 onready var self_peer_id = get_tree().get_network_unique_id()
 
 # Called when the node enters the scene tree for the first time.
@@ -38,6 +39,12 @@ func get_local_player_index() -> int:
 			return i
 	assert (false)
 	return -1
+
+func player_role_attr(player_index, attr_name):
+	return Global.roles[role_state[player_state[player_index][Global.ROLE]]][attr_name]
+
+func role_attr(role_index, attr_name):
+	return Global.roles[role_state[role_index]][attr_name]
 
 func create_game_tree():
 	town_node.create_town_nodes(town_state.size())
@@ -55,6 +62,10 @@ func create_game_tree():
 		player_state[local_player_index][Global.COLOR]
 	)
 
+	for i in Global.night_wake_order:
+		if role_state.has(i):
+			timer_stack.add_progress(i)
+
 func get_remote_player_index(index: int) -> int:
 	return index if index <= local_player_index else index - 1
 
@@ -69,35 +80,33 @@ func server_randomize_roles():
 	for i in range(player_state.size()):
 		var role_index = indices.pop_front()
 		rpc("_set_player_role", i, role_index)
-		var role = role_state[role_index]
 		messages.send_message(player_state[i][Global.ID], "You are the %s.\n  %s\n  %s" % [
-			role[Global.NAME],
-			role[Global.DESCRIPTION],
-			role[Global.INSTRUCT],
+			role_attr(role_index, Global.NAME),
+			role_attr(role_index, Global.DESCRIPTION),
+			role_attr(role_index, Global.INSTRUCT),
 		])
 	for i in range(town_state.size()):
 		rpc("_set_town_role", i, indices.pop_front())
 
 remotesync func message_player_role():
-	var role = role_state[player_state[local_player_index][Global.ROLE]]
 	messages.send_local_message("You are the %s.\n  %s\n  %s" % [
-		role[Global.NAME],
-		role[Global.DESCRIPTION],
-		role[Global.INSTRUCT],
+		player_role_attr(local_player_index, Global.NAME),
+		player_role_attr(local_player_index, Global.DESCRIPTION),
+		player_role_attr(local_player_index, Global.INSTRUCT),
 	])
 
 remotesync func _set_player_role(player_index: int, role_index: int):
 	print("Setting player %s to role %s" % [player_index, role_index])
 	player_state[player_index][Global.ROLE] = role_index
 	if player_index == local_player_index:
-		local_player_node.set_role(role_state[role_index][Global.NAME])
+		local_player_node.set_role_name(role_attr(role_index, Global.NAME))
 	else:
-		remote_players_node.set_role(get_remote_player_index(player_index), role_state[role_index][Global.NAME])
+		remote_players_node.set_role_name(get_remote_player_index(player_index), role_attr(role_index, Global.NAME))
 
 remotesync func _set_town_role(town_index: int, role_index: int):
 	print("Setting town %s to role %s" % [town_index, role_index])
 	town_state[town_index][Global.ROLE] = role_index
-	town_node.set_role(town_index, role_state[role_index][Global.NAME])
+	town_node.set_role_name(town_index, role_attr(role_index, Global.NAME))
 
 func assign_roles():
 	print("assigning roles...")

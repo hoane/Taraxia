@@ -1,12 +1,30 @@
-extends Control
+extends Node2D
 
-export (float) var time 
+signal progress_completed
+
+export (int) var role = 10
+export (Color, RGB) var progress_color = Color(1, 1, 1)
+export (float) var timeout = 30
+
+func init(_role, _color, _timeout = 30):
+	role = _role
+	progress_color = _color
+	timeout = _timeout
 
 func _ready():
-	start_timer()
+	$Progress.modulate = progress_color
+	$Icon.texture = Global.roles[role][Global.TEXTURE]
 
-func start_timer():
-	$Content/AnimationPlayer.play("ProgressBar")
+func start():
+	$Tween.interpolate_property(
+		$Progress,
+		"value",
+		1000,
+		0,
+		timeout
+	)
+	$Tween.start()
 
-func set_texture(texture):
-	$Content/Icon.texture = texture
+func _on_Progress_value_changed(value: float):
+	if value == 0:
+		emit_signal("progress_completed") 
