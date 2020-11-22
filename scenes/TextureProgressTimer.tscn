@@ -3,7 +3,6 @@
 [ext_resource path="res://assets/timer_texture_progress.png" type="Texture" id=2]
 [ext_resource path="res://assets/timer_texture_under.png" type="Texture" id=3]
 [ext_resource path="res://assets/timer_texture_over.png" type="Texture" id=4]
-[ext_resource path="res://assets/icons/crewmate_mono.png" type="Texture" id=5]
 [ext_resource path="res://src/TextureProgressTimer.gd" type="Script" id=6]
 
 [sub_resource type="SpriteFrames" id=1]
@@ -13,6 +12,10 @@ animations = [ {
 "name": "default",
 "speed": 5.0
 } ]
+
+[sub_resource type="StreamTexture" id=2]
+flags = 4
+load_path = "res://.import/crewmate_mono.png-977d1efeea9dc4038f72ebe54d44f1c9.stex"
 
 [node name="TextureProgressTimer" type="Node2D"]
 script = ExtResource( 6 )
@@ -25,7 +28,7 @@ frames = SubResource( 1 )
 [node name="Icon" type="Sprite" parent="."]
 position = Vector2( 66.372, 62.8084 )
 scale = Vector2( 0.75, 0.75 )
-texture = ExtResource( 5 )
+texture = SubResource( 2 )
 
 [node name="Progress" type="TextureProgress" parent="."]
 margin_left = 95.0

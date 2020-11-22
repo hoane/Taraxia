@@ -9,6 +9,5 @@ func create_town_nodes(n: int):
 	for _i in range(n):
 		content.add_child(Global.RoleCoin.instance())
 
-func set_role_name(index: int, role_name: String):
-	var node = content.get_child(index)
-	node.set_role_name(role_name)
+func get_coin(index: int) -> Node: # RoleCoin
+	return content.get_child(index)

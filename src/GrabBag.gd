@@ -8,7 +8,6 @@ func _ready():
 func add_item(node: Node):
 	node.set_name("GrabBagItem-%s" % $Content/Grid.get_child_count())
 	$Content/Grid.add_child(node)
-	print(node.name)
 
 func get_selected_values() -> Array:
 	var ret = []

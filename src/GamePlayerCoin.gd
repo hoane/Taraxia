@@ -6,9 +6,9 @@ onready var coin = $Content/RoleCoin
 func _ready():
 	pass
 
-func set_player_name(player_name: String):
+func set_info(player_name: String, player_color: Color):
 	label.text = player_name
-
-func set_player_color(player_color: Color):
-	print("set color %s" % player_color)
 	label.set("custom_colors/font_color", player_color)
+
+func get_coin(): # RoleCoin
+	return coin

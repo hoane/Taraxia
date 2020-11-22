@@ -51,13 +51,13 @@ func create_game_tree():
 	remote_players_node.create_remote_player_nodes(player_state.size() - 1)
 	for i in player_state.size():
 		if i != local_player_index:
-			remote_players_node.set_player(
-				get_remote_player_index(i),
+			var player = remote_players_node.get_player(get_remote_player_index(i))
+			player.set_info(
 				player_state[i][Global.NAME],
 				player_state[i][Global.COLOR]
 			)
 
-	local_player_node.set_player(
+	local_player_node.get_player().set_info(
 		player_state[local_player_index][Global.NAME],
 		player_state[local_player_index][Global.COLOR]
 	)
@@ -71,15 +71,17 @@ func get_remote_player_index(index: int) -> int:
 
 # Call on server after create_game_tree is complete on all clients
 func server_start_game():
+	print("Starting Game")
 	messages.broadcast_message("Starting Game!")
 	server_randomize_roles()
 
 func server_randomize_roles():
 	var indices = range(role_state.size())
 	indices.shuffle()
-	rpc("_set_role_suffle", indices)
+	rpc("_set_role_shuffle", indices)
 
-func _set_role_shuffle(indices):
+remotesync func _set_role_shuffle(indices):
+	print("setting randomized roles")
 	for i in range(player_state.size()):
 		var role_index = indices.pop_front()
 		_set_player_role(i, role_index)
@@ -99,18 +101,19 @@ remotesync func message_player_role():
 		player_role_attr(local_player_index, Global.INSTRUCT),
 	])
 
-remotesync func _set_player_role(player_index: int, role_index: int):
+func _set_player_role(player_index: int, role_index: int):
 	print("Setting player %s to role %s" % [player_index, role_index])
 	player_state[player_index][Global.ROLE] = role_index
 	if player_index == local_player_index:
-		local_player_node.set_role_name(role_attr(role_index, Global.NAME))
+		local_player_node.get_player().get_coin().set_role(role_state[role_index])
 	else:
-		remote_players_node.set_role_name(get_remote_player_index(player_index), role_attr(role_index, Global.NAME))
+		var coin = remote_players_node.get_player(get_remote_player_index(player_index)).get_coin()
+		coin.set_role(role_state[role_index])
 
-remotesync func _set_town_role(town_index: int, role_index: int):
+func _set_town_role(town_index: int, role_index: int):
 	print("Setting town %s to role %s" % [town_index, role_index])
 	town_state[town_index][Global.ROLE] = role_index
-	town_node.set_role_name(town_index, role_attr(role_index, Global.NAME))
+	town_node.get_coin(town_index).set_role(role_state[role_index])
 
 func assign_roles():
 	print("assigning roles...")
