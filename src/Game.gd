@@ -77,16 +77,20 @@ func server_start_game():
 func server_randomize_roles():
 	var indices = range(role_state.size())
 	indices.shuffle()
+	rpc("_set_role_suffle", indices)
+
+func _set_role_shuffle(indices):
 	for i in range(player_state.size()):
 		var role_index = indices.pop_front()
-		rpc("_set_player_role", i, role_index)
+		_set_player_role(i, role_index)
 		messages.send_message(player_state[i][Global.ID], "You are the %s.\n  %s\n  %s" % [
 			role_attr(role_index, Global.NAME),
 			role_attr(role_index, Global.DESCRIPTION),
 			role_attr(role_index, Global.INSTRUCT),
 		])
 	for i in range(town_state.size()):
-		rpc("_set_town_role", i, indices.pop_front())
+		_set_town_role(i, indices.pop_front())
+
 
 remotesync func message_player_role():
 	messages.send_local_message("You are the %s.\n  %s\n  %s" % [
