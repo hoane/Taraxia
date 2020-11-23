@@ -1,5 +1,6 @@
 extends Node
 
+const AsleepOverlay = preload("res://scenes/AsleepOverlay.tscn")
 const Client = preload("res://scenes/Client.tscn")
 const Game = preload("res://scenes/Game.tscn")
 const GamePlayerCoin = preload("res://scenes/GamePlayerCoin.tscn")
@@ -17,10 +18,12 @@ const SERVER_PORT = 42069
 enum {
 	PLAYER,
 	ROLE,
+	INITIAL_ROLE
 	TOWN,
 	NAME,
 	ATTR,
 	COLOR,
+	AWAKE,
 	INSTRUCT,
 	DESCRIPTION,
 	TEAM,
@@ -40,7 +43,9 @@ func init_game_state(players: Dictionary, _roles: Array):
 			NAME: players[id]["name"],
 			ID: players[id]["peer_id"],
 			COLOR: Color(randf(), randf(), randf()),
-			ROLE: -1
+			ROLE: -1,
+			INITIAL_ROLE: -1,
+			AWAKE: true
 		})
 	for r in _roles:
 		state[ROLE].append(r)
@@ -112,7 +117,7 @@ var roles = {
 		TEAM: Team.NONE,
 		INSTRUCT: "",
 		DESCRIPTION: "",
-		TEXTURE: load("res://assets/icons/crewmate.png"),
+		TEXTURE: load("res://assets/icons/unknown.png"),
 	},
 	Role.HOLOGRAM: {
 		NAME: "Hologram",
@@ -154,14 +159,14 @@ var roles = {
 		TEAM: Team.CREW,
 		INSTRUCT: "During the night, the Stowaway may swap their role with another player's.",
 		DESCRIPTION: "\"Someone grabbed my badge out of my bunk this morning. Can\'t imagine who.\"",
-		TEXTURE: load("res://assets/icons/crewmate.png"),
+		TEXTURE: load("res://assets/icons/stowaway.png"),
 	},
 	Role.SCIENTIST: {
 		NAME: "Scientist",
 		TEAM: Team.CREW,
 		INSTRUCT: "During the night, the Scientist may swap the roles of two other players.",
 		DESCRIPTION: "A runaway experiment has caused two crew members to swap bodies.",
-		TEXTURE: load("res://assets/icons/crewmate.png"),
+		TEXTURE: load("res://assets/icons/scientist.png"),
 	},
 	Role.AGENT: {
 		NAME: "Agent",

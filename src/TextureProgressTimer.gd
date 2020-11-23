@@ -2,7 +2,7 @@ extends Node2D
 
 signal progress_completed
 
-export (int) var role = 10
+export (int) var role = 0
 export (Color, RGB) var progress_color = Color(1, 1, 1)
 export (float) var timeout = 30
 
@@ -12,7 +12,7 @@ func init(_role, _color, _timeout = 30):
 	timeout = _timeout
 
 func _ready():
-	$Progress.modulate = progress_color
+	$Progress.tint_progress = progress_color
 	$Icon.texture = Global.roles[role][Global.TEXTURE]
 
 func start():

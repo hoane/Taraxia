@@ -1,30 +1,29 @@
 extends Control
 
-signal progress_completed(index)
-
-var stack_items = []
 var active_index = -1
 
 func _ready():
 	pass
 
 func start_next():
-	active_index += 1
-	start(active_index)
+	rpc("_start_next")
+
+remotesync func _start_next():
+	if active_index < $Stack/Items.get_child_count() - 1:
+		active_index += 1
+		start(active_index)
 
 func start(index):
 	active_index = index
 	$Stack/Items.get_child(index).start()
 
-func add_progress(role: int):
+func add_progress(progress_bar: Node):
 	var index = $Stack/Items.get_child_count()
-	print("adding progress bar %s for %s" % [index, role])
-	var node = Global.TextureProgressTimer.instance()
-	node.init(role, Color(1, 0.5, 0.5))
-	node.position = $Stack/Hints.get_child(index).position
+	print("adding progress bar")
+	progress_bar.position = $Stack/Hints.get_child(index).position
 
-	node.connect("progress_completed", self, "_on_progress_completed", [index])
-	$Stack/Items.add_child(node)
+	progress_bar.connect("progress_completed", self, "_on_progress_completed", [index])
+	$Stack/Items.add_child(progress_bar)
 
 func slide_out(index):
 	var node = $Stack/Items.get_child(index)
@@ -33,7 +32,7 @@ func slide_out(index):
 		"position:x",
 		node.position.x,
 		node.position.x + 400,
-		1.5,
+		1,
 		Tween.TRANS_BACK,
 		Tween.EASE_IN_OUT
 	)
@@ -54,7 +53,6 @@ func advance_items():
 	yield($Tween, "tween_all_completed")
 
 func _on_progress_completed(index):
-	emit_signal("progress_completed", index)
 	yield(slide_out(index), "completed")
 	yield(advance_items(), "completed")
 

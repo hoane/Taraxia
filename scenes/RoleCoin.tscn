@@ -1,16 +1,8 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/RoleCoin.gd" type="Script" id=1]
+[ext_resource path="res://assets/icons/unknown.png" type="Texture" id=2]
 [ext_resource path="res://tex/PixelFont.tres" type="DynamicFont" id=3]
-
-[sub_resource type="AtlasTexture" id=1]
-region = Rect2( 0, 0, 64, 64 )
-
-[sub_resource type="AtlasTexture" id=2]
-region = Rect2( 64, 0, 64, 64 )
-
-[sub_resource type="AtlasTexture" id=3]
-region = Rect2( 128, 0, 64, 64 )
 
 [node name="RoleCoin" type="MarginContainer"]
 anchor_right = 1.0
@@ -32,15 +24,13 @@ custom_constants/separation = 0
 
 [node name="Button" type="TextureButton" parent="Content"]
 margin_right = 320.0
-margin_bottom = 64.0
-texture_normal = SubResource( 1 )
-texture_pressed = SubResource( 2 )
-texture_hover = SubResource( 3 )
+margin_bottom = 120.0
+texture_normal = ExtResource( 2 )
 
 [node name="Label" type="Label" parent="Content"]
-margin_top = 64.0
+margin_top = 120.0
 margin_right = 320.0
-margin_bottom = 88.0
+margin_bottom = 144.0
 custom_fonts/font = ExtResource( 3 )
 text = "Error"
 align = 1

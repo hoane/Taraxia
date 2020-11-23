@@ -1,5 +1,15 @@
 extends Control
 
+enum {
+	RANDOMIZE
+}
+
+enum {
+	AWAKE = 1,
+	ASLEEP = 0,
+	OTHER = -1
+}
+
 # Role state:
 # [ roles ]
 #
@@ -14,6 +24,7 @@ var role_state
 var player_state
 var town_state
 var local_player_index
+var sync_collect = {}
 
 func init(_state: Dictionary):
 	role_state = _state[Global.ROLE]
@@ -48,6 +59,9 @@ func role_attr(role_index, attr_name):
 
 func create_game_tree():
 	town_node.create_town_nodes(town_state.size())
+	for i in town_state.size():
+		town_node.get_player(i).set_info("", Color.white)
+		town_node.get_player(i).set_awake(OTHER)
 	remote_players_node.create_remote_player_nodes(player_state.size() - 1)
 	for i in player_state.size():
 		if i != local_player_index:
@@ -62,17 +76,89 @@ func create_game_tree():
 		player_state[local_player_index][Global.COLOR]
 	)
 
+	var progress_node = Global.TextureProgressTimer.instance()
+	progress_node.init(0, Color(1, 1, 1), 3)
+	timer_stack.add_progress(progress_node)
 	for i in Global.night_wake_order:
 		if role_state.has(i):
-			timer_stack.add_progress(i)
+			# connect current role to previous node
+			if get_tree().is_network_server():
+				progress_node.connect("progress_completed", self, "_end_phase", [i])
+			progress_node = Global.TextureProgressTimer.instance()
+			progress_node.init(i, Color(1, 1, 1), 3)
+			timer_stack.add_progress(progress_node)
+
+
+func get_players_with_initial_role(role: int) -> Array:
+	var ret = []
+	for i in player_state.size():
+		var role_index = player_state[i][Global.INITIAL_ROLE]
+		if role_state[role_index] == role:
+			ret.append(i)
+	return ret
+
+func _end_phase(next_role: int):
+	for i in player_state.size():
+		set_player_sleep(i, ASLEEP)
+	yield(get_tree().create_timer(1.5), "timeout")
+	start_role_action(next_role)
+
+func start_role_action(role: int):
+	assert(get_tree().is_network_server())
+	print("Starting role action of %s" % [Global.roles[role][Global.NAME]])
+	var role_player_indices = get_players_with_initial_role(role)
+	for i in role_player_indices:
+		messages.send_message(player_state[i][Global.ID], Global.roles[role][Global.INSTRUCT])
+
+	match role:
+		Global.Role.HOLOGRAM:
+			pass
+		Global.Role.ALIEN:
+			pass
+		Global.Role.OFFICER:
+			pass
+		Global.Role.CLONE:
+			pass
+		Global.Role.COUNSELOR:
+			pass
+		Global.Role.STOWAWAY:
+			pass
+		Global.Role.SCIENTIST:
+			pass
+		Global.Role.AGENT:
+			pass
+		Global.Role.INSOMNIAC:
+			pass
+		Global.Role.CREWMATE:
+			pass
+		
 
 func get_remote_player_index(index: int) -> int:
 	return index if index <= local_player_index else index - 1
+
+func start_sync(action: int):
+	sync_collect[action] = []
+
+# Main synchronization
+remote func _sync_completed(action: int):
+	print("peer sync %s from %s" % [action, get_tree().get_rpc_sender_id()])
+	sync_collect[action].append(get_tree().get_rpc_sender_id())
+	print("synced %s of %s" % [player_state.size(), sync_collect[action].size()])
+	if sync_collect[action].size() == player_state.size():
+		sync_all_completed(action)
+
+func sync_all_completed(action: int):
+	match action:
+		RANDOMIZE:
+			messages.broadcast_message("Everyone, look at your role. No-one else can see your role.")
+			set_local_reveal(true)
+			timer_stack.start_next()
 
 # Call on server after create_game_tree is complete on all clients
 func server_start_game():
 	print("Starting Game")
 	messages.broadcast_message("Starting Game!")
+	start_sync(RANDOMIZE)
 	server_randomize_roles()
 
 func server_randomize_roles():
@@ -84,37 +170,56 @@ remotesync func _set_role_shuffle(indices):
 	print("setting randomized roles")
 	for i in range(player_state.size()):
 		var role_index = indices.pop_front()
-		_set_player_role(i, role_index)
-		messages.send_message(player_state[i][Global.ID], "You are the %s.\n  %s\n  %s" % [
-			role_attr(role_index, Global.NAME),
-			role_attr(role_index, Global.DESCRIPTION),
-			role_attr(role_index, Global.INSTRUCT),
-		])
+		set_initial_player_role(i, role_index)
 	for i in range(town_state.size()):
-		_set_town_role(i, indices.pop_front())
+		set_town_role(i, indices.pop_front())
 
+	if get_tree().is_network_server():
+		_sync_completed(RANDOMIZE)
+	else:
+		rpc_id(1, "_sync_completed", RANDOMIZE)
 
 remotesync func message_player_role():
-	messages.send_local_message("You are the %s.\n  %s\n  %s" % [
+	messages.send_local_message("You are the %s.\n  %s" % [
 		player_role_attr(local_player_index, Global.NAME),
-		player_role_attr(local_player_index, Global.DESCRIPTION),
-		player_role_attr(local_player_index, Global.INSTRUCT),
+		player_role_attr(local_player_index, Global.DESCRIPTION)
 	])
 
-func _set_player_role(player_index: int, role_index: int):
+func set_initial_player_role(player_index: int, role_index: int):
 	print("Setting player %s to role %s" % [player_index, role_index])
 	player_state[player_index][Global.ROLE] = role_index
+	player_state[player_index][Global.INITIAL_ROLE] = role_index
 	if player_index == local_player_index:
-		local_player_node.get_player().get_coin().set_role(role_state[role_index])
+		local_player_node.get_player().set_role(role_state[role_index])
 	else:
-		var coin = remote_players_node.get_player(get_remote_player_index(player_index)).get_coin()
-		coin.set_role(role_state[role_index])
+		var player = remote_players_node.get_player(get_remote_player_index(player_index))
+		player.set_role(role_state[role_index])
 
-func _set_town_role(town_index: int, role_index: int):
+func set_town_role(town_index: int, role_index: int):
 	print("Setting town %s to role %s" % [town_index, role_index])
 	town_state[town_index][Global.ROLE] = role_index
-	town_node.get_coin(town_index).set_role(role_state[role_index])
+	town_node.get_player(town_index).set_role(role_state[role_index])
 
-func assign_roles():
-	print("assigning roles...")
+##############################
+# REMOTE/SYNC STATE MANAGEMENT
+##############################
 
+func set_player_sleep(player_index: int, awake: int):
+	rpc("_set_player_sleep", player_index, awake)
+
+remotesync func _set_player_sleep(player_index: int, awake: int):
+	if player_index == local_player_index:
+		local_player_node.get_player().set_awake(awake)
+		match awake:
+			AWAKE:
+				get_node("AsleepOverlay").remove()
+			ASLEEP:
+				add_child(Global.AsleepOverlay.instance())
+	else:
+		remote_players_node.get_player(get_remote_player_index(player_index)).set_awake(awake)
+
+func set_local_reveal(reveal: bool):
+	rpc("_set_local_reveal", reveal)
+
+remotesync func _set_local_reveal(reveal: bool):
+	local_player_node.get_player().set_reveal(reveal)

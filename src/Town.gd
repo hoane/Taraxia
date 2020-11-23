@@ -7,7 +7,7 @@ func _ready():
 
 func create_town_nodes(n: int):
 	for _i in range(n):
-		content.add_child(Global.RoleCoin.instance())
+		content.add_child(Global.GamePlayerCoin.instance())
 
-func get_coin(index: int) -> Node: # RoleCoin
+func get_player(index: int) -> Node: # GamePlayerCoin
 	return content.get_child(index)
