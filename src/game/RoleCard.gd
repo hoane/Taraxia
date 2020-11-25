@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 
 enum {
 	AWAKE = 1,
@@ -20,6 +20,7 @@ const awake_color = Color(1, 0.23, 0.23)
 const asleep_color = Color(0.47, 0.76, 0.95)
 
 func _ready():
+	icon.modulate = Color(1, 1, 1, 1)
 	update_gui()
 
 func update_gui():
@@ -50,6 +51,15 @@ func set_role(role: int):
 func set_reveal(reveal):
 	_reveal = reveal
 	update_gui()
+
+func set_spotlight(spotlight):
+	if spotlight:
+		$AnimationPlayer.play("spotlight")
+	else:
+		$AnimationPlayer.stop("spotlight")
+		icon.modulate = Color(1, 1, 1, 1)
+
+
 
 func set_info(player_name: String, player_color: Color):
 	name_label.text = player_name

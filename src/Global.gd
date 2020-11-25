@@ -2,8 +2,8 @@ extends Node
 
 const AsleepOverlay = preload("res://scenes/AsleepOverlay.tscn")
 const Client = preload("res://scenes/Client.tscn")
-const Game = preload("res://scenes/Game.tscn")
-const GamePlayerCoin = preload("res://scenes/GamePlayerCoin.tscn")
+const Game = preload("res://scenes/game/Game.tscn")
+const RoleCard = preload("res://scenes/game/RoleCard.tscn")
 const Lobby = preload("res://scenes/Lobby.tscn")
 const LobbyMenu = preload("res://scenes/LobbyMenu.tscn")
 const LobbyPlayerLabel = preload("res://scenes/LobbyPlayerLabel.tscn")
@@ -12,7 +12,6 @@ const OptionsMenu = preload("res://scenes/OptionsMenu.tscn")
 const RoleCoin = preload("res://scenes/RoleCoin.tscn")
 const StartMenu = preload("res://scenes/StartMenu.tscn")
 const TextureProgressTimer = preload("res://scenes/TextureProgressTimer.tscn")
-
 
 const SERVER_PORT = 42069
 enum {
@@ -25,6 +24,7 @@ enum {
 	COLOR,
 	AWAKE,
 	INSTRUCT,
+	FLAVOR,
 	DESCRIPTION,
 	TEAM,
 	TEXTURE,
@@ -117,90 +117,103 @@ var roles = {
 		TEAM: Team.NONE,
 		INSTRUCT: "",
 		DESCRIPTION: "",
+		FLAVOR: "",
 		TEXTURE: load("res://assets/icons/unknown.png"),
 	},
 	Role.HOLOGRAM: {
 		NAME: "Hologram",
 		TEAM: Team.NONE,
-		INSTRUCT: "During the night, the Hologram will pick another player and become their role.",
-		DESCRIPTION: "A Holodeck accident created a living holographic copy of someone on board.",
+		INSTRUCT: "",
+		DESCRIPTION: "During the night, the Hologram will pick another player and become their role. The Hologram is on the team of the role they copy.",
+		FLAVOR: "A Holodeck accident created a living holographic copy of someone on board.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.ALIEN: {
 		NAME: "Alien",
 		TEAM: Team.ALIEN,
-		INSTRUCT: "During the night, the Alien will wake up and see the other Aliens.",
-		DESCRIPTION: "Extra-dimensional aliens may have snuck on board during the last light-speed jump.",
+		INSTRUCT: "Alien, wake up and identify the other Alien. If you are the only Alien, you may view one unused card from the center.",
+		DESCRIPTION: "During the night, the Alien will wake up and see the other Aliens. The Alien is on the alien team.",
+		FLAVOR: "Extra-dimensional aliens may have snuck on board during the last light-speed jump.",
 		TEXTURE: load("res://assets/icons/alien.png"),
 	},
 	Role.OFFICER: {
 		NAME: "1st Officer",
 		TEAM: Team.ALIEN,
-		INSTRUCT: "During the night, the 1st Officer will wake up and see the Aliens.",
-		DESCRIPTION: "The 1st Officer has shown a keen interest in the aliens' unique physiology.",
+		INSTRUCT: "1st Officer, wake up and identify the aliens.",
+		DESCRIPTION: "During the night, the 1st Officer will wake up and see the Aliens. The 1st Officer is on the alien team.",
+		FLAVOR: "The 1st Officer has shown a keen interest in the aliens' unique physiology. ",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.CLONE: {
 		NAME: "Clone",
 		TEAM: Team.CREW,
-		INSTRUCT: "During the night, the Clone will wake up and see the other Clones.",
-		DESCRIPTION: "Lesson learned: don't set the transporter to UDP.",
+		INSTRUCT: "Clone, wake up and identify the other Clone.",
+		DESCRIPTION: "During the night, the Clone will wake up and see the other Clones. The Clone is on the crew team.",
+		FLAVOR: "Lesson learned: don't set the transporter to UDP.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.COUNSELOR: {
 		NAME: "Counselor",
 		TEAM: Team.CREW,
-		INSTRUCT: "During the night, the Counselor may look at another player's role, or two unused roles.",
-		DESCRIPTION: "The ship's Counselor may have some insights into the crew's status.",
+		INSTRUCT: "Counselor, wake up. You may view one other player's card, or two unused cards.",
+		DESCRIPTION: "During the night, the Counselor may look at another player's card, or two unused cards. The Counselor is on the crew team.",
+		FLAVOR: "The ship's Counselor may have some insights into the crew's status.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.STOWAWAY: {
 		NAME: "Stowaway",
 		TEAM: Team.CREW,
-		INSTRUCT: "During the night, the Stowaway may swap their role with another player's.",
-		DESCRIPTION: "\"Someone grabbed my badge out of my bunk this morning. Can\'t imagine who.\"",
+		INSTRUCT: "Stowaway, wake up. You may swap your card with another player's.",
+		DESCRIPTION: "During the night, the Stowaway may swap their card with another player's. The Stowaway is on the crew team.",
+		FLAVOR: "\"Someone grabbed my badge out of my bunk this morning. Can\'t imagine who.\"",
 		TEXTURE: load("res://assets/icons/stowaway.png"),
 	},
 	Role.SCIENTIST: {
 		NAME: "Scientist",
 		TEAM: Team.CREW,
-		INSTRUCT: "During the night, the Scientist may swap the roles of two other players.",
-		DESCRIPTION: "A runaway experiment has caused two crew members to swap bodies.",
+		INSTRUCT: "Scientist, wake up. You may swap the cards of two other players.",
+		DESCRIPTION: "During the night, the Scientist may swap the cards of two other players. The Scientist is on the crew team.",
+		FLAVOR: "A runaway experiment has caused two crew members to swap bodies.",
 		TEXTURE: load("res://assets/icons/scientist.png"),
 	},
 	Role.AGENT: {
 		NAME: "Agent",
 		TEAM: Team.CREW,
-		INSTRUCT: "During the night, the Sleeper Agent will swap their role for an unused one, sight unseen.",
-		DESCRIPTION: "Under enough layers of deep cover, it's easy to forget who you really are.",
+		INSTRUCT: "Sleeper Agent, wake up. Swap your card with a card from the center.",
+		DESCRIPTION: "During the night, the Sleeper Agent will swap their card for an unused one. The Sleeper Agent is on the crew team.",
+		FLAVOR: "Under enough layers of deep cover, it's easy to forget who you really are.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.INSOMNIAC: {
 		NAME: "Insomniac",
 		TEAM: Team.CREW,
-		INSTRUCT: "At the end of the night, the Insomniac will wake up and check their own role.",
-		DESCRIPTION: "You guys are sleeping?",
+		INSTRUCT: "Insomniac, wake up and look at your own card.",
+		DESCRIPTION: "At the end of the night, the Insomniac will wake up and check their own card. The Insomniac is on the crew team.",
+		FLAVOR: "You guys are sleeping?",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.CREWMATE: {
 		NAME: "Crewmate",
 		TEAM: Team.CREW,
-		INSTRUCT: "The Crewmate does not perform any special action.",
-		DESCRIPTION: "Some of the crew aren't holograms, aliens, or robots at all.",
+		INSTRUCT: "",
+		DESCRIPTION: "The Crewmate does not perform any special action. The Crewmate is on the crew team.",
+		FLAVOR: "Some of the crew aren't holograms, aliens, or robots at all.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.ANDROID: {
 		NAME: "Android",
 		TEAM: Team.ANDROID,
-		INSTRUCT: "The Android does not perform any special action. They win if and only if they die at the end of the game.",
-		DESCRIPTION: "The Android's developed a bit of a death wish after so many dangerous missions.",
+		INSTRUCT: "",
+		DESCRIPTION: "The Android does not perform any special action. They win if and only if they die at the end of the game.",
+		FLAVOR: "The Android's developed a bit of a death wish after so many dangerous missions.",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 	Role.SECURITY: {
 		NAME: "Security",
 		TEAM: Team.CREW,
-		INSTRUCT: "The Security Officer does not perform any special action. If they die at the end of the game, their vote dies as well",
-		DESCRIPTION: "So anyway, I started blasting...",
+		INSTRUCT: "",
+		DESCRIPTION: "The Security Officer does not perform any special action. If they die at the end of the game, their vote dies as well. The Security Officer is on the crew team.",
+		FLAVOR: "So anyway, I started blasting...",
 		TEXTURE: load("res://assets/icons/crewmate.png"),
 	},
 }

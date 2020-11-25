@@ -1,11 +1,18 @@
 extends Control
 
+var _awake = true
 
 func _ready():
-	pass # Replace with function body.
+	modulate = Color(1, 1, 1, 0)
 
 
-func remove():
-	$AnimationPlayer.play("FadeOut")
-	yield(get_tree().create_timer(1), "timeout")
-	queue_free()
+func sleep():
+	if _awake:
+		_awake = false
+		$AnimationPlayer.play("FadeIn")
+
+
+func wake():
+	if !_awake:
+		_awake = true
+		$AnimationPlayer.play("FadeOut")

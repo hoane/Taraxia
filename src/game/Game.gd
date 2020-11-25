@@ -36,7 +36,8 @@ onready var remote_players_node = $Margin/Areas/Remote
 onready var town_node = $Margin/Areas/Town
 onready var local_player_node = $Margin/Areas/Local/LocalPlayer
 onready var messages = $Margin/Areas/Local/Messages
-onready var timer_stack = $ProgressTimerStack
+onready var timer_stack = $Overlay/ProgressTimerStack
+onready var asleep_overlay = $Overlay/AsleepOverlay
 onready var self_peer_id = get_tree().get_network_unique_id()
 
 # Called when the node enters the scene tree for the first time.
@@ -77,7 +78,7 @@ func create_game_tree():
 	)
 
 	var progress_node = Global.TextureProgressTimer.instance()
-	progress_node.init(0, Color(1, 1, 1), 3)
+	progress_node.init(0, Color(1, 1, 1), 5)
 	timer_stack.add_progress(progress_node)
 	for i in Global.night_wake_order:
 		if role_state.has(i):
@@ -85,7 +86,7 @@ func create_game_tree():
 			if get_tree().is_network_server():
 				progress_node.connect("progress_completed", self, "_end_phase", [i])
 			progress_node = Global.TextureProgressTimer.instance()
-			progress_node.init(i, Color(1, 1, 1), 3)
+			progress_node.init(i, Color(1, 1, 1), 5)
 			timer_stack.add_progress(progress_node)
 
 
@@ -114,23 +115,39 @@ func start_role_action(role: int):
 		Global.Role.HOLOGRAM:
 			pass
 		Global.Role.ALIEN:
-			pass
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 		Global.Role.OFFICER:
-			pass
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
+			var aliens = get_players_with_initial_role(Global.Role.ALIEN)
+			for i in aliens:
+				set_player_spotlight(i, true)
 		Global.Role.CLONE:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
 		Global.Role.COUNSELOR:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
 		Global.Role.STOWAWAY:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
 		Global.Role.SCIENTIST:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
 		Global.Role.AGENT:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
 		Global.Role.INSOMNIAC:
+			for i in role_player_indices:
+				set_player_sleep(i, AWAKE)
 			pass
-		Global.Role.CREWMATE:
-			pass
+	timer_stack.start_next()
 		
 
 func get_remote_player_index(index: int) -> int:
@@ -174,16 +191,15 @@ remotesync func _set_role_shuffle(indices):
 	for i in range(town_state.size()):
 		set_town_role(i, indices.pop_front())
 
-	if get_tree().is_network_server():
-		_sync_completed(RANDOMIZE)
-	else:
-		rpc_id(1, "_sync_completed", RANDOMIZE)
-
-remotesync func message_player_role():
 	messages.send_local_message("You are the %s.\n  %s" % [
 		player_role_attr(local_player_index, Global.NAME),
 		player_role_attr(local_player_index, Global.DESCRIPTION)
 	])
+	
+	if get_tree().is_network_server():
+		_sync_completed(RANDOMIZE)
+	else:
+		rpc_id(1, "_sync_completed", RANDOMIZE)
 
 func set_initial_player_role(player_index: int, role_index: int):
 	print("Setting player %s to role %s" % [player_index, role_index])
@@ -212,9 +228,9 @@ remotesync func _set_player_sleep(player_index: int, awake: int):
 		local_player_node.get_player().set_awake(awake)
 		match awake:
 			AWAKE:
-				get_node("AsleepOverlay").remove()
+				asleep_overlay.wake()
 			ASLEEP:
-				add_child(Global.AsleepOverlay.instance())
+				asleep_overlay.sleep()
 	else:
 		remote_players_node.get_player(get_remote_player_index(player_index)).set_awake(awake)
 
@@ -223,3 +239,12 @@ func set_local_reveal(reveal: bool):
 
 remotesync func _set_local_reveal(reveal: bool):
 	local_player_node.get_player().set_reveal(reveal)
+
+func set_player_spotlight(player_index: int, spotlight: bool):
+	rpc("_set_player_spotlight", player_index, spotlight)
+
+remotesync func _set_player_spotlight(player_index: int, spotlight: bool):
+	if player_index == local_player_index:
+		local_player_node.get_player().set_spotlight(spotlight)
+	else:
+		remote_players_node.get_player(get_remote_player_index(player_index)).set_spotlight(spotlight)

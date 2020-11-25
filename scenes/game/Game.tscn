@@ -1,15 +1,16 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://src/Game.gd" type="Script" id=1]
+[ext_resource path="res://src/game/Game.gd" type="Script" id=1]
 [ext_resource path="res://src/Town.gd" type="Script" id=2]
 [ext_resource path="res://assets/ninepatch.png" type="Texture" id=3]
 [ext_resource path="res://src/LocalPlayer.gd" type="Script" id=4]
 [ext_resource path="res://src/Remote.gd" type="Script" id=5]
-[ext_resource path="res://scenes/GamePlayerCoin.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scenes/game/RoleCard.tscn" type="PackedScene" id=6]
 [ext_resource path="res://assets/TYPEWR__.TTF" type="DynamicFontData" id=7]
 [ext_resource path="res://tex/PixelFont.tres" type="DynamicFont" id=8]
 [ext_resource path="res://src/Messages.gd" type="Script" id=9]
 [ext_resource path="res://scenes/ProgressTimerStack.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scenes/AsleepOverlay.tscn" type="PackedScene" id=11]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -44,9 +45,9 @@ __meta__ = {
 }
 
 [node name="Margin" type="MarginContainer" parent="."]
-anchor_right = 0.759
+anchor_right = 0.698
 anchor_bottom = 1.0
-margin_right = -77.5201
+margin_right = 0.559937
 custom_constants/margin_right = 20
 custom_constants/margin_top = 20
 custom_constants/margin_left = 20
@@ -173,12 +174,6 @@ __meta__ = {
 }
 
 [node name="Player" parent="Margin/Areas/Local/LocalPlayer/Content" instance=ExtResource( 6 )]
-margin_left = 66.0
-margin_top = 187.0
-margin_right = 211.0
-margin_bottom = 373.0
-size_flags_horizontal = 0
-size_flags_vertical = 0
 
 [node name="Messages" type="MarginContainer" parent="Margin/Areas/Local"]
 margin_left = 297.0
@@ -230,12 +225,24 @@ custom_fonts/normal_font = SubResource( 1 )
 custom_constants/line_separation = 3
 scroll_following = true
 
-[node name="ProgressTimerStack" parent="." instance=ExtResource( 10 )]
-anchor_left = 1.0
+[node name="Overlay" type="HBoxContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = -386.0
-margin_right = -6.0
-margin_bottom = 0.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AsleepOverlay" parent="Overlay" instance=ExtResource( 11 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 900.0
+margin_bottom = 720.0
 size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ProgressTimerStack" parent="Overlay" instance=ExtResource( 10 )]
+margin_left = 900.0
+margin_right = 1280.0
+margin_bottom = 720.0
 size_flags_vertical = 3

@@ -1,11 +1,12 @@
 extends Node
 
-var current_scene
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	open_start_menu()
+	add_child(preload("res://scenes/ParallaxStarfield.tscn").instance())
 
 func open_start_menu():
-	current_scene = Global.StartMenu.instance()
-	add_child(current_scene)
+	add_child(Global.StartMenu.instance())
+
+func _process(_delta):
+	if get_node("StartMenu") == null:
+		open_start_menu()

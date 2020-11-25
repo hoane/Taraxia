@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://shader/test.shader" type="Shader" id=2]
+
+[sub_resource type="ShaderMaterial" id=1]
+shader = ExtResource( 2 )
+shader_param/direction = Vector2( 1, 0 )
+shader_param/speed_scale = 0.01
+
+[sub_resource type="OpenSimplexNoise" id=2]
+seed = 11
+octaves = 1
+period = 3.0
+
+[sub_resource type="NoiseTexture" id=3]
+flags = 2
+width = 1024
+height = 1024
+seamless = true
+noise = SubResource( 2 )
+
+[node name="ParallaxStarfield" type="Node"]
+
+[node name="Sprite" type="Sprite" parent="."]
+material = SubResource( 1 )
+scale = Vector2( 1.24997, 0.703157 )
+texture = SubResource( 3 )
+centered = false
