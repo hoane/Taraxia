@@ -54,5 +54,5 @@ func sync_state(id):
 func _on_StartButton_pressed():
 	var roles = selected_bag.get_selected_values()
 	var players = get_players()
-	if roles.size() > players.size():
+	if roles.size() == players.size() + 3:
 		emit_signal("lobby_start_button", players, roles)

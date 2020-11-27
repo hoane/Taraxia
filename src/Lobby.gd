@@ -48,7 +48,7 @@ remotesync func _enter_game(game_state):
 	state = State.GAME
 	lobby_game = Global.Game.instance()
 	lobby_game.connect("ready", self, "_on_game_ready")
-	lobby_game.init(game_state)
+	lobby_game.init(local_player["peer_id"], game_state[Global.PLAYER], game_state[Global.ROLE])
 	add_child(lobby_game)
 	lobby_menu.queue_free()
 
@@ -72,7 +72,7 @@ func done_game_init():
 	preconfigured_ids.append(id)
 	print("Got %s acks of %s" % [preconfigured_ids.size(), players.size()])
 	if preconfigured_ids.size() == players.size():
-		lobby_game.server_start_game()
+		lobby_game.start_game()
 
 func _player_connected(id):
 	if state == State.LOBBY:

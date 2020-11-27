@@ -1,8 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/game/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/nameplate.png" type="Texture" id=2]
 [ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://scenes/AsleepOverlay.tscn" type="PackedScene" id=4]
+[ext_resource path="res://shader/spotlight.shader" type="Shader" id=5]
+[ext_resource path="res://assets/black.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 size = 14
@@ -12,15 +15,16 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 3 )
 
-[node name="Player" type="Node2D"]
-script = ExtResource( 1 )
+[sub_resource type="ShaderMaterial" id=2]
+shader = ExtResource( 5 )
+shader_param/spotlight = false
 
-[node name="RoleCardPosition" type="Position2D" parent="."]
+[node name="Player" type="Node"]
+script = ExtResource( 1 )
 
 [node name="Badge" type="Node2D" parent="."]
 position = Vector2( 2, 109.41 )
 __meta__ = {
-"_edit_group_": true,
 "_edit_lock_": true
 }
 
@@ -63,3 +67,15 @@ text = "Awake"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="RoleCardPosition" type="Position2D" parent="Badge"]
+position = Vector2( -2, -109.41 )
+
+[node name="Spotlight" type="Sprite" parent="Badge"]
+material = SubResource( 2 )
+position = Vector2( -2.36437, -1.10228 )
+scale = Vector2( 11.5263, 5.8972 )
+texture = ExtResource( 6 )
+
+[node name="AsleepOverlay" parent="." instance=ExtResource( 4 )]
+position = Vector2( -6.84106, 5.50621 )

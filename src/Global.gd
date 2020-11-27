@@ -2,8 +2,6 @@ extends Node
 
 const AsleepOverlay = preload("res://scenes/AsleepOverlay.tscn")
 const Client = preload("res://scenes/Client.tscn")
-const Game = preload("res://scenes/game/Game.tscn")
-const RoleCard = preload("res://scenes/game/RoleCard.tscn")
 const Lobby = preload("res://scenes/Lobby.tscn")
 const LobbyMenu = preload("res://scenes/LobbyMenu.tscn")
 const LobbyPlayerLabel = preload("res://scenes/LobbyPlayerLabel.tscn")
@@ -12,6 +10,10 @@ const OptionsMenu = preload("res://scenes/OptionsMenu.tscn")
 const RoleCoin = preload("res://scenes/RoleCoin.tscn")
 const StartMenu = preload("res://scenes/StartMenu.tscn")
 const TextureProgressTimer = preload("res://scenes/TextureProgressTimer.tscn")
+
+const Game = preload("res://scenes/game/Game.tscn")
+const RoleCard = preload("res://scenes/game/RoleCard.tscn")
+const Player = preload("res://scenes/game/Player.tscn")
 
 const SERVER_PORT = 42069
 enum {
@@ -34,25 +36,21 @@ enum {
 func init_game_state(players: Dictionary, _roles: Array):
 	assert(players.size() <= _roles.size())
 	var state = {
-		PLAYER: [],
+		PLAYER: {},
 		ROLE: [],
-		TOWN: []
 	}
 	for id in players.keys():
-		state[PLAYER].append({
+		state[PLAYER][id] = {
 			NAME: players[id]["name"],
 			ID: players[id]["peer_id"],
 			COLOR: Color(randf(), randf(), randf()),
 			ROLE: -1,
 			INITIAL_ROLE: -1,
 			AWAKE: true
-		})
-	for r in _roles:
-		state[ROLE].append(r)
-	for _i in range(_roles.size() - players.size()):
-		state[TOWN].append({
-			ROLE: -1
-		})
+		}
+	var tmp_roles = _roles.duplicate()
+	tmp_roles.shuffle()
+	state[ROLE] = tmp_roles
 
 	return state 
 

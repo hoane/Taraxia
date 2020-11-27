@@ -1,24 +1,70 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://assets/stars3.png" type="Texture" id=1]
-[ext_resource path="res://assets/stars2.png" type="Texture" id=2]
-[ext_resource path="res://assets/stars1.png" type="Texture" id=3]
+[ext_resource path="res://assets/boardbg.png" type="Texture" id=1]
+[ext_resource path="res://src/game/GameBoard.gd" type="Script" id=2]
 
-[node name="GameBoard" type="Node"]
+[node name="GameBoard" type="Node2D"]
+script = ExtResource( 2 )
 
-[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
-
-[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
-texture = ExtResource( 3 )
-
-[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
-texture = ExtResource( 2 )
-
-[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
-
-[node name="Sprite" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
+[node name="BG" type="Sprite" parent="."]
+scale = Vector2( 0.499977, 0.499977 )
 texture = ExtResource( 1 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Positions" type="Node" parent="."]
+
+[node name="Local" type="Node" parent="Positions"]
+
+[node name="Player" type="Position2D" parent="Positions/Local"]
+position = Vector2( 265.778, 670.093 )
+
+[node name="Remote" type="Node" parent="Positions"]
+
+[node name="A1" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 103.909, 243.074 )
+
+[node name="A2" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 257.123, 240.998 )
+
+[node name="A3" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 450.488, 236.245 )
+
+[node name="A4" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 640.572, 230.295 )
+
+[node name="A5" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 825.302, 227.03 )
+
+[node name="A6" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 143.423, 440.253 )
+
+[node name="A7" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 334.954, 434.017 )
+
+[node name="A8" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 541.658, 436.979 )
+
+[node name="A9" type="Position2D" parent="Positions/Remote"]
+position = Vector2( 753.108, 438.765 )
+
+[node name="Town" type="Node" parent="Positions"]
+
+[node name="B1" type="Position2D" parent="Positions/Town"]
+position = Vector2( 1001.66, 134.526 )
+
+[node name="B2" type="Position2D" parent="Positions/Town"]
+position = Vector2( 1003.45, 343.286 )
+
+[node name="B3" type="Position2D" parent="Positions/Town"]
+position = Vector2( 1006.12, 592.758 )
+
+[node name="UI" type="Node" parent="Positions"]
+
+[node name="Log" type="Position2D" parent="Positions/UI"]
+position = Vector2( 728.755, 588.884 )
+
+[node name="Timer" type="Position2D" parent="Positions/UI"]
+position = Vector2( 1182.22, 359.032 )

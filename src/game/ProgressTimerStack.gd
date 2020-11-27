@@ -1,4 +1,4 @@
-extends Control
+extends Node2D
 
 var active_index = -1
 

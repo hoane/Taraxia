@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://tex/PixelFont.tres" type="DynamicFont" id=1]
-[ext_resource path="res://src/AsleepOverlay.gd" type="Script" id=2]
+[ext_resource path="res://src/game/AsleepOverlay.gd" type="Script" id=2]
+[ext_resource path="res://assets/black.png" type="Texture" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "FadeIn"
@@ -33,32 +34,27 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 1, 1, 1, 0 ) ]
 }
 
-[node name="AsleepOverlay" type="Control"]
+[node name="AsleepOverlay" type="Node2D"]
 modulate = Color( 1, 1, 1, 0 )
-anchor_right = 1.0
-anchor_bottom = 1.0
+z_index = 1
 script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
-[node name="ColorRect" type="ColorRect" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0.0196078, 0.0196078, 0.109804, 1 )
-
-[node name="CenterContainer" type="CenterContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Label" type="Label" parent="CenterContainer"]
-margin_left = 561.0
-margin_top = 348.0
-margin_right = 719.0
-margin_bottom = 372.0
-custom_fonts/font = ExtResource( 1 )
-text = "You are asleep"
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 657.255, 372.489 )
+scale = Vector2( 89.7446, 49.3115 )
+texture = ExtResource( 3 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/FadeIn = SubResource( 1 )
 anims/FadeOut = SubResource( 2 )
+
+[node name="Label" type="Label" parent="."]
+margin_left = 226.737
+margin_top = 332.249
+margin_right = 384.737
+margin_bottom = 356.249
+custom_fonts/font = ExtResource( 1 )
+text = "You are asleep"
+__meta__ = {
+"_edit_use_anchors_": false
+}
