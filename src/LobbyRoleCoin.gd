@@ -3,6 +3,7 @@ extends Control
 var role = Global.Role.CREWMATE
 var selected = false setget set_selected
 var _hover = false
+var texture_index = 0
 
 func init(_role, _selected):
 	role = _role
@@ -14,9 +15,12 @@ onready var button = $Content/Button
 
 func _ready():
 	role_label.text = Global.roles[role][Global.NAME]
-	button.texture_normal = Global.roles[role][Global.TEXTURE]
 	button.material = ShaderMaterial.new()
 	button.material.shader = SelectShader
+	button.expand = true
+	button.stretch_mode = TextureButton.STRETCH_SCALE
+	button.set_size(Vector2(120, 120))
+	button.texture_normal = Global.roles[role][Global.TEXTURE][texture_index]
 	update_shader()
 
 func set_selected(_selected: bool):

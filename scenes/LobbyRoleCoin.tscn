@@ -19,14 +19,17 @@ margin_bottom = 216.0
 custom_constants/separation = 0
 
 [node name="Button" type="TextureButton" parent="Content"]
-margin_left = 220.0
-margin_right = 220.0
+margin_left = 160.0
+margin_right = 280.0
+margin_bottom = 120.0
+rect_min_size = Vector2( 120, 120 )
 size_flags_horizontal = 4
 stretch_mode = 3
 
 [node name="RoleLabel" type="Label" parent="Content"]
+margin_top = 120.0
 margin_right = 440.0
-margin_bottom = 24.0
+margin_bottom = 144.0
 rect_min_size = Vector2( 100, 0 )
 custom_fonts/font = ExtResource( 2 )
 text = "Error"

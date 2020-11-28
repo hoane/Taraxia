@@ -1,6 +1,7 @@
 extends Node2D
 
 var role = 0
+var texture_index = 0
 
 func init(_role: int):
 	role = _role
@@ -8,18 +9,16 @@ func init(_role: int):
 onready var icon = $Icon
 
 func _ready():
-	icon.texture = Global.roles[0][Global.TEXTURE]
+	icon.set_scale(Vector2(0.1, 0.1))
 	icon.modulate = Color(1, 1, 1, 1)
+	set_texture(Global.roles[0][Global.TEXTURE][texture_index])
 
-func set_role(_role: int):
-	role = _role
-
-func set_spotlight(spotlight):
-	if spotlight:
-		$AnimationPlayer.play("spotlight")
-	else:
-		$AnimationPlayer.stop("spotlight")
-		icon.modulate = Color(1, 1, 1, 1)
+func set_texture(texture):
+	var target_size = Vector2(140, 140)
+	var tex_size = texture.get_size()
+	var size_scale = Vector2(target_size.x / tex_size.x, target_size.y / tex_size.y)
+	icon.set_scale(size_scale)
+	icon.texture = texture
 
 # SERVER
 
@@ -32,7 +31,5 @@ func set_reveal(reveal: bool, reveal_to_id: int):
 # CLIENT
 
 remote func _set_reveal(reveal: bool):
-	if reveal:
-		icon.texture = Global.roles[role][Global.TEXTURE]
-	else:
-		icon.texture = Global.roles[0][Global.TEXTURE]
+	var idx = role if reveal else 0
+	set_texture(Global.roles[idx][Global.TEXTURE][texture_index])

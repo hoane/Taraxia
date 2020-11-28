@@ -4,7 +4,6 @@
 [ext_resource path="res://assets/nameplate.png" type="Texture" id=2]
 [ext_resource path="res://assets/PixelForce.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scenes/AsleepOverlay.tscn" type="PackedScene" id=4]
-[ext_resource path="res://shader/spotlight.shader" type="Shader" id=5]
 [ext_resource path="res://assets/black.png" type="Texture" id=6]
 
 [sub_resource type="DynamicFont" id=1]
@@ -15,8 +14,32 @@ use_mipmaps = true
 use_filter = true
 font_data = ExtResource( 3 )
 
+[sub_resource type="Shader" id=3]
+code = "shader_type canvas_item;
+
+uniform bool spotlight = false;
+
+const float speed = 2.0;
+const float pi = 3.1415;
+const float freq = 4.0;
+
+void fragment() {
+    if (!spotlight) {
+        COLOR = vec4(0.0, 0.0, 0.0, 0.0);
+        return;
+    }
+    vec2 v = UV - vec2(0.5, 0.5);
+    v *= 1.2;
+    float delta = v.x * v.x * v.x * v.x + v.y * v.y * v.y * v.y;
+    float border = (1.0 - cos((delta * pi * 10.0) + 1.0)) / 2.0;
+    float y = delta * 8.0;
+    border -= y * y;
+    border *= 0.25 * (2.0 - sin(TIME * speed));
+    COLOR = vec4(0.8, 0.7, 0.1, max(border, 0.0));
+}"
+
 [sub_resource type="ShaderMaterial" id=2]
-shader = ExtResource( 5 )
+shader = SubResource( 3 )
 shader_param/spotlight = false
 
 [node name="Player" type="Node"]

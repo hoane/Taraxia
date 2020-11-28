@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/crewmate.png-656b8ae48d7db2ed73bcf076d205a943.stex"
+path="res://.import/clone_2.png-845dc50ade01a74022d6447d48092311.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/crewmate.png"
-dest_files=[ "res://.import/crewmate.png-656b8ae48d7db2ed73bcf076d205a943.stex" ]
+source_file="res://assets/icons/clone_2.png"
+dest_files=[ "res://.import/clone_2.png-845dc50ade01a74022d6447d48092311.stex" ]
 
 [params]
 

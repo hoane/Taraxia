@@ -1,8 +1,19 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/game/Game.gd" type="Script" id=1]
+[ext_resource path="res://scenes/game/MessageLog.gd" type="Script" id=2]
+[ext_resource path="res://assets/TYPEWR__.TTF" type="DynamicFontData" id=7]
 [ext_resource path="res://scenes/ProgressTimerStack.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/game/GameBoard.tscn" type="PackedScene" id=12]
+
+[sub_resource type="DynamicFont" id=1]
+size = 18
+outline_size = 1
+outline_color = Color( 0, 0, 0, 1 )
+use_mipmaps = true
+use_filter = true
+extra_spacing_top = 5
+font_data = ExtResource( 7 )
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 1 )
@@ -17,3 +28,14 @@ script = ExtResource( 1 )
 position = Vector2( 1095.26, 20.9763 )
 scale = Vector2( 0.5, 0.5 )
 z_index = 2
+
+[node name="MessageLog" type="RichTextLabel" parent="."]
+margin_left = 578.0
+margin_top = 499.0
+margin_right = 891.0
+margin_bottom = 682.0
+custom_fonts/normal_font = SubResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -29,6 +29,7 @@ func init(_local_player_id: int, _player_configs: Dictionary, _role_config: Arra
 onready var gameboard = $GameBoard
 onready var players = $Players
 onready var roles = $Roles
+onready var message_log = $MessageLog
 
 onready var timer_stack = $ProgressTimerStack
 
@@ -95,14 +96,29 @@ func get_players_with_initial_role(role: int):
 
 func start_game():
 	assert(get_tree().is_network_server())
+	message_log.broadcast_message("Starting Game! Everyone, look at your ID card.")
 	for p in players.get_children():
+		var r = Global.roles[p.initial_role]
+		var message = "You are the %s. %s" % [r[Global.NAME], r[Global.DESCRIPTION]]
+		message_log.send_message(p.id, message)
 		p.role.set_reveal(true, p.id)
 	timer_stack.start_next()
 
+func sleep_all():
+	for p in players.get_children():
+		p.set_sleep_overlay(true)
+		for q in players.get_children():
+			p.set_sleep(q.id, true)
+
+func wake_group(group: Array):
+	for p in group:
+		p.set_sleep_overlay(false)
+		for q in group:
+			p.set_sleep(q.id, false)
+
 func _end_phase(next_role: int):
 	assert(get_tree().is_network_server())
-	for p in players.get_children():
-		p.set_sleep(true)
+	sleep_all()
 	yield(get_tree().create_timer(2), "timeout")
 	start_role_action(next_role)
 
@@ -111,35 +127,31 @@ func start_role_action(role: int):
 	print("Starting role action of %s" % [Global.roles[role][Global.NAME]])
 	var role_players = get_players_with_initial_role(role)
 
+	wake_group(role_players)
+	for p in role_players:
+		message_log.send_message(p.id, Global.roles[role][Global.INSTRUCT])
+
 	match role:
 		Global.Role.HOLOGRAM:
 			pass
 		Global.Role.ALIEN:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.OFFICER:
 			for p in role_players:
-				p.set_sleep(false)
 				for a in get_players_with_initial_role(Global.Role.ALIEN):
 					a.set_spotlight(p.id, true)
 		Global.Role.CLONE:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.COUNSELOR:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.STOWAWAY:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.SCIENTIST:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.AGENT:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 		Global.Role.INSOMNIAC:
-			for p in role_players:
-				p.set_sleep(false)
+			pass
 	timer_stack.start_next()
 
 #########

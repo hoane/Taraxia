@@ -13,7 +13,11 @@ func init(_role, _color, _timeout = 30):
 
 func _ready():
 	$Progress.tint_progress = progress_color
-	$Icon.texture = Global.roles[role][Global.TEXTURE]
+	$Icon.texture = Global.roles[role][Global.TEXTURE][0]
+	var target_size = Vector2(100, 100)
+	var tex_size = $Icon.texture.get_size()
+	var size_scale = Vector2(target_size.x / tex_size.x, target_size.y / tex_size.y)
+	$Icon.set_scale(size_scale)
 
 func start():
 	$Tween.interpolate_property(
