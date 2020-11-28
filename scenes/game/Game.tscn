@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/game/Game.gd" type="Script" id=1]
-[ext_resource path="res://scenes/game/MessageLog.gd" type="Script" id=2]
+[ext_resource path="res://src/game/MessageLog.gd" type="Script" id=2]
 [ext_resource path="res://assets/TYPEWR__.TTF" type="DynamicFontData" id=7]
 [ext_resource path="res://scenes/ProgressTimerStack.tscn" type="PackedScene" id=10]
 [ext_resource path="res://scenes/game/GameBoard.tscn" type="PackedScene" id=12]

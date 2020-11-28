@@ -7,7 +7,6 @@ const LobbyMenu = preload("res://scenes/LobbyMenu.tscn")
 const LobbyPlayerLabel = preload("res://scenes/LobbyPlayerLabel.tscn")
 const LobbyRoleCoin = preload("res://scenes/LobbyRoleCoin.tscn")
 const OptionsMenu = preload("res://scenes/OptionsMenu.tscn")
-const RoleCoin = preload("res://scenes/RoleCoin.tscn")
 const StartMenu = preload("res://scenes/StartMenu.tscn")
 const TextureProgressTimer = preload("res://scenes/TextureProgressTimer.tscn")
 
